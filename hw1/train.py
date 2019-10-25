@@ -92,6 +92,7 @@ def expand_dataset(trainxs, trainys):
     return train_x, train_y
 
 if __name__ == "__main__":
+	test_name, out_name = sys.argv[1], sys.argv[2]
     
 	year1_pd = pd.read_csv('./data/year1-data.csv')
 	year2_pd = pd.read_csv('./data/year2-data.csv')
