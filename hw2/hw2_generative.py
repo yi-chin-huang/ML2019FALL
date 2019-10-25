@@ -60,13 +60,16 @@ def predict(x_test, c0_num, c1_num, c0_mu, c1_mu, shared_sigma):
     b = -1/2 * np.dot(np.dot(c0_mu.T, inv(shared_sigma)), c0_mu) +1/2 * np.dot(np.dot(c1_mu.T, inv(shared_sigma)), c1_mu) + np.log(c0_num/c1_num)
     z = np.dot(w, x_test.T) + b
     pred = sigmoid(z)
-    return pred
-  
+    return pred  
+ 
 def out(res, name):
-    sample = pd.read_csv('./data/sample_submission.csv')
-    for i, y in enumerate(res):
-        sample.at[i,'label'] = y
-    sample.to_csv(name, index=False) 
+    f = open(name, 'w')
+    print("id,label", file = f)
+    for i, y in enumerate(pred_y):
+        if y >= 0.5:
+            print(i+1, 1, sep = ',', file = f)
+        else:
+            print(i+1, 0, sep = ',', file = f)
 
 if __name__ == '__main__':
     

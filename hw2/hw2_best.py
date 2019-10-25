@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import sys
 from sklearn.ensemble import GradientBoostingClassifier
+import pickle
 
 def load_data(X_train, Y_train, X_test):
     x_train_pd = pd.read_csv(X_train)
@@ -55,7 +56,11 @@ if __name__ == "__main__":
     x_train, y_train, x_test = load_data(sys.argv[3], sys.argv[4], sys.argv[5])
     x_train_nor, x_test_nor = normalize(x_train, x_test)
     x_train_add, x_test_add = add_features(x_train_nor, x_test_nor)
-    gb_clf = train(x_train_add, np.reshape(y_train,(-1,)))
+    # gb_clf = train(x_train_add, np.reshape(y_train,(-1,)))
+    # with open('model/gdb_clf.pickle', 'wb') as f:
+    #     pickle.dump(gb_clf, f)
+    with open('model/gdb_clf.pickle', 'rb') as f:
+        gb_clf = pickle.load(f)
     pred_y = gb_clf.predict(x_test_add)
     out(pred_y, sys.argv[6])
 

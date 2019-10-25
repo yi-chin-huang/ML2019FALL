@@ -73,13 +73,6 @@ def sigmoid(z):
     res = np.clip(1/(1 + np.exp(-z)), 1e-6, 1-1e-6)
     return res
 
-def predict(x_test, c0_num, c1_num, c0_mu, c1_mu, shared_sigma):
-    w = np.dot((c0_mu - c1_mu).T, inv(shared_sigma))
-    b = -1/2 * np.dot(np.dot(c0_mu.T, inv(shared_sigma)), c0_mu) +1/2 * np.dot(np.dot(c1_mu.T, inv(shared_sigma)), c1_mu) + np.log(c0_num/c1_num)
-    z = np.dot(w, x_test.T) + b
-    pred = sigmoid(z)
-    return pred
-
 def my_predict(test_x, ws, name):    
     sample = pd.read_csv('./data/sample_submission.csv')
     pred_y = np.dot(test_x,ws)
