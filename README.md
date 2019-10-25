@@ -1,2 +1,3 @@
 # ML2019FALL
-For NTU ML lecture
+* Predict PM2.5 using linear regression.
+* Predict income using generative model, logistic regression and gradient boosting tree.
