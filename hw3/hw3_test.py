@@ -133,7 +133,6 @@ if __name__ == '__main__':
                     transforms.Grayscale(num_output_channels=1),
                     transforms.ToTensor(),
                     ])
-    os.remove("cnn2_1500.pickle")
     os.system('wget https://www.dropbox.com/s/a5lf0hlbrgqc7zu/cnn2_1500.pickle')
     model = CNN()
     use_cuda = torch.cuda.is_available()
