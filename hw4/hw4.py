@@ -16,15 +16,15 @@ class AutoEncoder(nn.Module):
         
         self.encoder1 = nn.Sequential(
             nn.Conv2d(3, 8, 3, 2, 1),
-            nn.LeakyReLU(),
+            nn.ReLU(),
             nn.BatchNorm2d(8),
             
             nn.Conv2d(8, 16, 3, 2, 1),
-            nn.LeakyReLU(),
+            nn.ReLU(),
             nn.BatchNorm2d(16),
             
             nn.Conv2d(16, 32, 3, 2, 1),
-            nn.LeakyReLU(),
+            nn.ReLU(),
             nn.BatchNorm2d(32))
         
         self.encoder2 = nn.Sequential(
