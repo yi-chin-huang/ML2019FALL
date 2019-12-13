@@ -11,6 +11,8 @@ from gensim.models import Word2Vec
 from torch.nn.utils.rnn import pad_sequence
 import sys
 import os
+import pickle
+import multiprocessing
 
 def load_data(train_x, train_y, test_x):
     train_clean = clean_data(train_x['comment'])
@@ -20,7 +22,9 @@ def load_data(train_x, train_y, test_x):
     train_label = [train_y['label'][i] for i, s in enumerate(train_clean) if s != '']
     train_df_c = pd.DataFrame({'id': range(len(train_clean_drop)), 'comment': train_clean_drop})
     test_df_c = pd.DataFrame({'id': range(len(test_clean_fill)), 'comment': test_clean_fill}) 
-    return train_df_c, test_df_c, train_label
+    corp = train_clean.copy()
+    corp.extend(test_clean)
+    return train_df_c, test_df_c, train_label, corp
     
 def cleaning(doc):
     txt = [token.lemma_ for token in doc if not token.is_stop]
@@ -35,6 +39,15 @@ def clean_data(data):
     txt = [cleaning(doc) for doc in nlp.pipe(brief_cleaning, batch_size=5000, n_threads=-1)]
     return txt
 
+def word2vec(corp):
+    cores = multiprocessing.cpu_count()
+    dictionary = [w.split() for w in corp]
+    w2v_model = Word2Vec(size=256, window=5, min_count=1, workers=cores)
+    w2v_model.build_vocab(dictionary) 
+    w2v_model.train(dictionary, total_examples=w2v_model.corpus_count, epochs=1000)
+    w2v_model.save("./model/train_word2vec_256.model")
+    return w2v_model
+    
 def prepare_sequence(seq, word_to_ix):
     seq = seq.split(' ')
     idxs = [word_to_ix[w] for w in seq if w != ' ']
@@ -162,10 +175,10 @@ def train(model, train_dataloader, EPOCH):
             print("TRAIN", "accuracy:", accu, "loss:", total_loss)
             torch.save(model.state_dict(), f'./hist_model/{epoch}')
 
-def predict(PATH, test_loader, pretrained_vec):
+def predict(PATH, test_loader, pretrained_vec, voc_size):
     use_cuda = torch.cuda.is_available()
     device = torch.device('cuda' if use_cuda else 'cpu')
-    pred_model = LSTMClassifier(256, 128, 16255, 2, pretrained_vec)
+    pred_model = LSTMClassifier(256, 128, voc_size, 2, pretrained_vec)
     pred_model = pred_model.to(device)
     pred_model.load_state_dict(torch.load(PATH))
     pred_model.eval()
@@ -188,9 +201,13 @@ if __name__ == '__main__':
     train_y = pd.read_csv(sys.argv[2])
     test_x = pd.read_csv(sys.argv[3])
     
-    train_df_c, test_df_c, train_label = load_data(train_x, train_y, test_x)
+    train_df_c, test_df_c, train_label, corp = load_data(train_x, train_y, test_x)
     word_to_ix = make_dict(train_df_c, test_df_c)
-    w2v_model = Word2Vec.load("./model/word2vec_256_1000.model")
+    
+    with open('./model/new_word_to_ix.pickle', 'wb') as file:
+        pickle.dump(word_to_ix, file)
+
+    w2v_model = word2vec(corp)
     pretrained_vec = build_pretrained_dict(word_to_ix, w2v_model)
 
     train_dataset = dataset(train_df_c, train_label, w2v_model)
@@ -204,5 +221,5 @@ if __name__ == '__main__':
     PATH = f'./hist_model/{EPOCH}'
     if not os.path.exists('./result'):
         os.mkdir('./result')
-    prediction = predict(PATH, test_loader, pretrained_vec)
+    prediction = predict(PATH, test_loader, pretrained_vec, len(word_to_ix))
     output = out(prediction, './result/train_prediction.csv')

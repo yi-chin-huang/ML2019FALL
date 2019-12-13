@@ -27,14 +27,14 @@ def clean_data(data):
 
 def prepare_sequence(seq, word_to_ix):
     seq = seq.split(' ')
-    idxs = [word_to_ix[w] for w in seq if w != ' ']
+    idxs = [word_to_ix[w] for w in seq if w != ' ' and w != 'dibs']
     return torch.tensor(idxs, dtype=torch.long)
 
 class dataset_test(Dataset):
     def __init__(self, test_x, word_to_ix):
         self.test_x = test_x['comment']
     def __getitem__(self, index):
-        sentence = self.test_x[index]
+        sentence = self.test_x[index]    
         sentence = prepare_sequence(sentence, word_to_ix)
         return torch.LongTensor(sentence)
     def __len__(self):
@@ -101,12 +101,16 @@ def out(result, out_file):
         
 if __name__ == '__main__':
     
-    test_x = pd.read_csv(sys.argv[1])
-    test_clean = clean_data(test_x['comment'])
-    test_clean_fill = [s if s != '' else "good" for s in test_clean]   
-    test_df_c = pd.DataFrame({'id': range(len(test_clean_fill)), 'comment': test_clean_fill})
+    test_x = pd.read_csv(sys.argv[1])        
+    with open('./model/tokenize.pickle', 'rb') as file:
+        tokenize_dict = pickle.load(file)
+
+    new_comment = [tokenize_dict[sent] for sent in test_x['comment']]
+    test_df_c = pd.DataFrame({'id': range(len(new_comment)), 'comment': new_comment})
+    
     with open('./model/word_to_ix.pickle', 'rb') as file:
         word_to_ix = pickle.load(file)
+        
     pretrained_vec = torch.load('model/pretrained_vec')
     test_dataset = dataset_test(test_df_c, word_to_ix)
     test_loader = DataLoader(test_dataset, batch_size = 256, shuffle=False, collate_fn = add_padding_test)
