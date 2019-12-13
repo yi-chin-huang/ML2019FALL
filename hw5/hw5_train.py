@@ -216,7 +216,7 @@ if __name__ == '__main__':
     test_loader = DataLoader(test_dataset, batch_size = 256, shuffle=False, collate_fn = add_padding_test)
     
     model = LSTMClassifier(256, 128, len(word_to_ix), 2, pretrained_vec)
-    EPOCH = 80
+    EPOCH = 100
     train(model, train_loader, EPOCH)
     PATH = f'./hist_model/{EPOCH}'
     if not os.path.exists('./result'):
