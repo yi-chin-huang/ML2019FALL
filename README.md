@@ -1,6 +1,6 @@
 # ML2019FALL
-* HW1: Predict PM2.5 with linear regression.
-* HW2: Predict income using generative model, logistic regression and gradient boosting tree.
-* HW3: Image sentiment classification using convolutional neural network (CNN).
-* HW4: Image classification using autoencoder and dimension reduction methods.
-* HW5: Malicious comments identification using word embedding and recurrent neural network(RNN).
+* HW1: Predict PM2.5 with linear regression. [Task Description](https://docs.google.com/presentation/d/1BWeAJFCgpqyi7rWHPFNTHYAr_SwE1cI-SZBcHMANPbk/edit?fbclid=IwAR3MKPFMgjnZed4o9vhZkRlvTX6LDobp0D9VBXa2f9lumln-3JAml2R7bcw#slide=id.g4cd6560e29_0_10)
+* HW2: Predict income using generative model, logistic regression and gradient boosting tree. [Task Description](https://docs.google.com/presentation/d/1HJUGz3vo_yuj_7fXT9DgfnP9mbFyOiFQkS3DJzPsbwE/edit?fbclid=IwAR1jI2IL85jgNMzlwnOOe2vSjnmrgNJ414ojAQZve5k-cZgVLnQGGO8Ae6g#slide=id.g64642be7b1_0_0)
+* HW3: Image sentiment classification using convolutional neural network (CNN). [Task Description](https://docs.google.com/presentation/d/1_jtrCNWMgxsIo5BCVp7jEi0PDQkqq9-PxUl0B1RGNHA/edit?fbclid=IwAR0SF3hnlI5zhJL5py5dnwsv65kyDvFFHd773vtFT5yCrFhjcKXv-O71hx4#slide=id.g62e3db9e19_0_202)
+* HW4: Image classification using autoencoder and dimension reduction methods. [Task Description](https://docs.google.com/presentation/d/14oCK-bW6KDb4dho9iGyMHlQgyqXx52sBQnmX5Q2snOg/edit#slide=id.g755d2678b9_0_0)
+* HW5: Malicious comments identification using word embedding and recurrent neural network(RNN). [Task Description](https://docs.google.com/presentation/d/14oCK-bW6KDb4dho9iGyMHlQgyqXx52sBQnmX5Q2snOg/edit#slide=id.g755d2678b9_0_0)
